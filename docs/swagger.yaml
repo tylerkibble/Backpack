@@ -1,5 +1,12 @@
 basePath: /
 definitions:
+  main.Credentials:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   main.ErrorResponse:
     properties:
       error:
@@ -45,6 +52,36 @@ info:
   title: Backpack API
   version: "1.0"
 paths:
+  /api/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user with the provided JSON payload
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/main.Credentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/main.Response'
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Login a user
+      tags:
+      - users
   /api/todos:
     get:
       consumes:
@@ -57,6 +94,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/main.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
       summary: Get all todos
       tags:
       - todos
@@ -80,6 +121,10 @@ paths:
             $ref: '#/definitions/main.Response'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/main.ErrorResponse'
       summary: Create a new todo
